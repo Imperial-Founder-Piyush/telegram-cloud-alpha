@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Cloud Alpha</title>
+    <!-- Supabase Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<!-- नाम पूछने वाला प्रो पॉप-अप (Username Modal) -->
+<div id="usernameModal" class="modal-backdrop">
+    <div class="modal-card">
+        <div class="modal-logo">T</div>
+        <h3>टेलीग्राम क्लाउड में आपका स्वागत है</h3>
+        <p>शुरू करने के लिए अपना नाम दर्ज करें</p>
+        <input type="text" id="modalInput" placeholder="आपका नाम..." autocomplete="off">
+        <button id="joinBtn">चैट शुरू करें</button>
+    </div>
+</div>
+
+<!-- मुख्य चैट स्क्रीन -->
+<div class="chat-container">
+    <div class="chat-header">
+        <div class="header-info">
+            <span class="chat-title">Telegram Cloud Alpha</span>
+            <span class="chat-status" id="chatStatus">オンライン चैट रूम (0 लाइव)</span>
+        </div>
+        <div class="header-buttons">
+            <!-- डार्क मोड टॉगल बटन -->
+            <button id="themeToggleBtn" class="header-action-btn" title="थीम बदलें">☀️</button>
+            <!-- पूरी चैट साफ़ करने का बटन -->
+            <button id="clearChatBtn" class="header-action-btn" title="चैट साफ़ करें">
+                <svg viewBox="0 0 24 24"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 8,19V7H6V19Z"/></svg>
+            </button>
+        </div>
+    </div>
+    
+    <!-- मैसेजेस का डिब्बा (टेलीग्राम बैकग्राउंड के साथ) -->
+    <div class="messages-box" id="messagesBox"></div>
+
+    <!-- सुंदर इन-बिल्ट इमोजी कीबोर्ड पैनल -->
+    <div id="emojiPicker" class="emoji-picker hidden">
+        <span class="emoji-item">😀</span><span class="emoji-item">😂</span><span class="emoji-item">🤣</span><span class="emoji-item">😊</span>
+        <span class="emoji-item">😍</span><span class="emoji-item">😘</span><span class="emoji-item">😜</span><span class="emoji-item">😎</span>
+        <span class="emoji-item">👍</span><span class="emoji-item">🔥</span><span class="emoji-item">💯</span><span class="emoji-item">👏</span>
+        <span class="emoji-item">❤️</span><span class="emoji-item">🎉</span><span class="emoji-item">🚀</span><span class="emoji-item">✨</span>
+        <span class="emoji-item">🙏</span><span class="emoji-item">👑</span><span class="emoji-item">💀</span><span class="emoji-item">🧠</span>
+    </div>
+    
+    <!-- इनपुट एरिया -->
+    <div class="input-area">
+        <!-- इमेज/फोटो अपलोड करने के लिए छुपा हुआ इनपुट -->
+        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+        
+        <!-- इमेज चुनने वाला प्लस (+) बटन -->
+        <button id="attachBtn" class="input-action-btn" title="फोटो भेजें">
+            <svg viewBox="0 0 24 24"><path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/></svg>
+        </button>
+
+        <!-- इमोजी कीबोर्ड खोलने वाला स्माइली बटन -->
+        <button id="emojiBtn" class="input-action-btn" title="इमोजी चुनें">😊</button>
+
+        <input type="text" id="messageInput" placeholder="एक संदेश लिखें..." autocomplete="off">
+        
+        <button id="sendBtn">
+            <!-- भेजने वाला तीर (Send Icon) -->
+            <svg viewBox="0 0 24 24"><path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/></svg>
+        </button>
+    </div>
+</div>
+
+<script src="./script.js"></script>
+</body>
+</html>

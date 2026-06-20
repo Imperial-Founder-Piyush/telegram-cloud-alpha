@@ -1,0 +1,398 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #e7ebf0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* 🌙 डार्क मोड बॉडी थीम */
+body.dark {
+    background-color: #0f172a;
+}
+
+/* मुख्य कंटेनर */
+.chat-container {
+    width: 100%;
+    max-width: 480px;
+    height: 100vh;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+body.dark .chat-container {
+    background: #18181b;
+}
+
+/* शानदार हेडर */
+.chat-header {
+    background: #517da2;
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+body.dark .chat-header {
+    background: #27272a;
+    border-bottom: 1px solid #3f3f46;
+}
+
+.header-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-title {
+    font-size: 1.15rem;
+    font-weight: bold;
+    display: block;
+}
+
+.chat-status {
+    font-size: 0.8rem;
+    color: #d1e2f1;
+}
+
+body.dark .chat-status {
+    color: #a1a1aa;
+}
+
+.header-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+/* हेडर बटन्स का स्टाइल */
+.header-action-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    font-size: 1.2rem;
+}
+
+.header-action-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.header-action-btn svg {
+    width: 22px;
+    height: 22px;
+    fill: white;
+}
+
+/* टेलीग्राम क्लासिक वॉलपेपर बैकग्राउंड */
+.messages-box {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    background-color: #f4f4f5;
+    background-image: radial-gradient(rgba(0, 0, 0, 0.04) 15%, transparent 16%), radial-gradient(rgba(0, 0, 0, 0.04) 15%, transparent 16%);
+    background-size: 16px 16px;
+    background-position: 0 0, 8px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* 🌙 डार्क मोड बैकग्राउंड */
+body.dark .messages-box {
+    background-color: #09090b;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.02) 15%, transparent 16%), radial-gradient(rgba(255, 255, 255, 0.02) 15%, transparent 16%);
+}
+
+/* मैसेजेस बबल्स */
+.message {
+    background: white;
+    padding: 8px 12px;
+    border-radius: 12px 12px 12px 3px;
+    max-width: 75%;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.07);
+    align-self: flex-start;
+    position: relative;
+    word-break: break-word;
+}
+
+body.dark .message {
+    background: #27272a;
+    color: #f4f4f5;
+}
+
+/* मेरा खुद का मैसेज (राईट साइड) */
+.message.mine {
+    background: #effdde;
+    border-radius: 12px 12px 3px 12px;
+    align-self: flex-end;
+}
+
+body.dark .message.mine {
+    background: #064e3b;
+    color: #ecfdf5;
+}
+
+/* यूज़र का नाम */
+.username {
+    font-weight: bold;
+    font-size: 0.8rem;
+    color: #3884c5;
+    margin-bottom: 3px;
+}
+body.dark .username {
+    color: #60a5fa;
+}
+.message.mine .username {
+    color: #4da04a;
+}
+body.dark .message.mine .username {
+    color: #34d399;
+}
+
+/* मैसेज टेक्स्ट और टाइम */
+.msg-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 15px;
+    font-size: 0.95rem;
+    color: #212121;
+}
+
+body.dark .msg-content {
+    color: #e4e4e7;
+}
+
+/* भेजी गई इमेज का स्टाइल */
+.chat-image {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 8px;
+    margin-top: 4px;
+    display: block;
+    cursor: pointer;
+}
+
+/* टाइम का स्टाइल */
+.msg-time {
+    font-size: 0.7rem;
+    color: #a3a3a3;
+    white-space: nowrap;
+}
+
+body.dark .msg-time {
+    color: #71717a;
+}
+
+/* नीचे का इनपुट एरिया */
+.input-area {
+    padding: 10px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-top: 1px solid #e6e6e6;
+}
+
+body.dark .input-area {
+    background: #18181b;
+    border-top: 1px solid #27272a;
+}
+
+/* इनपुट बटन्स (+ और स्माइली) */
+.input-action-btn {
+    background: transparent;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1.3rem;
+}
+
+.input-action-btn:hover {
+    background: #f1f1f1;
+}
+
+body.dark .input-action-btn:hover {
+    background: #27272a;
+}
+
+.input-action-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: #757575;
+}
+
+body.dark .input-action-btn svg {
+    fill: #a1a1aa;
+}
+
+.input-area input[type="text"] {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #dbdbdb;
+    border-radius: 20px;
+    outline: none;
+    font-size: 0.95rem;
+    background: #f1f1f1;
+}
+
+body.dark .input-area input[type="text"] {
+    background: #27272a;
+    border: 1px solid #3f3f46;
+    color: white;
+}
+
+.input-area input[type="text"]:focus {
+    background: #fff;
+    border-color: #517da2;
+}
+
+body.dark .input-area input[type="text"]:focus {
+    background: #18181b;
+    border-color: #a1a1aa;
+}
+
+/* गोल सेंड बटन */
+.input-area button:not(.input-action-btn) {
+    background: #517da2;
+    border: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+body.dark .input-area button:not(.input-action-btn) {
+    background: #3f3f46;
+}
+
+.input-area button:not(.input-action-btn) svg {
+    width: 20px;
+    height: 20px;
+    fill: white;
+}
+
+/* इमोजी कीबोर्ड पैनल स्टाइल */
+.emoji-picker {
+    position: absolute;
+    bottom: 65px;
+    left: 10px;
+    background: white;
+    border: 1px solid #dbdbdb;
+    border-radius: 12px;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1px);
+    grid-auto-rows: minmax(40px, auto);
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 100;
+    max-height: 180px;
+    overflow-y: auto;
+    width: 200px;
+    justify-items: center;
+    align-items: center;
+}
+
+body.dark .emoji-picker {
+    background: #27272a;
+    border: 1px solid #3f3f46;
+}
+
+.emoji-item {
+    font-size: 1.4rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.emoji-item:hover {
+    transform: scale(1.2);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* सिस्टम/सूचना संदेश */
+.system-msg {
+    align-self: center;
+    background: rgba(0, 0, 0, 0.2);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    margin: 4px 0;
+}
+
+/* पॉप-अप स्टाइल */
+.modal-backdrop {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 1000;
+}
+
+.modal-card {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    width: 85%;
+    max-width: 360px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.modal-logo {
+    width: 60px; height: 60px;
+    background: #517da2;
+    color: white;
+    font-size: 2rem; font-weight: bold;
+    border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    margin: 0 auto 15px;
+}
+
+.modal-card h3 { color: #212121; margin-bottom: 5px; }
+.modal-card p { color: #757575; font-size: 0.85rem; margin-bottom: 20px; }
+
+.modal-card input {
+    width: 100%; padding: 12px;
+    border: 1px solid #dbdbdb; border-radius: 10px;
+    outline: none; font-size: 1rem; margin-bottom: 15px;
+    text-align: center;
+}
+
+.modal-card button {
+    background: #517da2; color: white; border: none;
+    padding: 12px; width: 100%; border-radius: 10px;
+    font-size: 1rem; font-weight: bold; cursor: pointer;
+}
