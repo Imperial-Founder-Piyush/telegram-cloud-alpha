@@ -19,6 +19,9 @@ const themeToggleBtn = document.getElementById('themeToggleBtn');
 const emojiBtn = document.getElementById('emojiBtn');
 const emojiPicker = document.getElementById('emojiPicker');
 
+// 🔍 नए सर्च इनपुट बॉक्स को कनेक्ट किया
+const searchFileInput = document.getElementById('searchFileInput');
+
 // यूज़र का नाम सेट करना और लाइव आना
 function setUsername() {
     const enteredName = modalInput.value.trim();
@@ -102,6 +105,24 @@ function appendMessage(msg) {
     
     messagesBox.appendChild(msgDiv);
     messagesBox.scrollTop = messagesBox.scrollHeight;
+}
+
+// 🔍 2.5 नया सर्च और फ़िल्टर फंक्शन (रीयल-टाइम सर्च के लिए)
+if (searchFileInput) {
+    searchFileInput.addEventListener('input', (e) => {
+        const searchText = e.target.value.toLowerCase().trim();
+        const allMessages = document.querySelectorAll('.message');
+
+        allMessages.forEach(msgDiv => {
+            const msgText = msgDiv.innerText.toLowerCase();
+            // अगर सर्च टेक्स्ट मैसेज में मौजूद है तो दिखाओ, नहीं तो छिपा दो
+            if (msgText.includes(searchText)) {
+                msgDiv.style.display = 'block';
+            } else {
+                msgDiv.style.display = 'none';
+            }
+        });
+    });
 }
 
 // 3. टेक्स्ट मैसेज भेजने का लॉजिक
@@ -241,3 +262,4 @@ function setupRealtime() {
             }
         });
 }
+    
