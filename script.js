@@ -3,14 +3,19 @@ const SUPABASE_ANON_KEY = "sb_publishable_tmxQYeFiFfHIIxdLSe0v6A_kfEpvrvz";
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let username = "";
+let userEmail = "";
+
+// HTML एलिमेंट्स उठाना
+const authModal = document.getElementById('authModal');
+const authEmail = document.getElementById('authEmail');
+const authPassword = document.getElementById('authPassword');
+const loginBtn = document.getElementById('loginBtn');
+const signupBtn = document.getElementById('signupBtn');
+const chatContainer = document.getElementById('chatContainer');
 
 const messagesBox = document.getElementById('messagesBox');
 const messageInput = document.getElementById('messageInput');
 const sendBtn = document.getElementById('sendBtn');
-const usernameModal = document.getElementById('usernameModal');
-const modalInput = document.getElementById('modalInput');
-const joinBtn = document.getElementById('joinBtn');
 const chatStatus = document.getElementById('chatStatus');
 const clearChatBtn = document.getElementById('clearChatBtn');
 const attachBtn = document.getElementById('attachBtn');
@@ -19,25 +24,6 @@ const themeToggleBtn = document.getElementById('themeToggleBtn');
 const emojiBtn = document.getElementById('emojiBtn');
 const emojiPicker = document.getElementById('emojiPicker');
 const searchFileInput = document.getElementById('searchFileInput');
-
-// यूज़र का नाम सेट करना और लाइव आना
-function setUsername() {
-    const enteredName = modalInput.value.trim();
-    if (!enteredName) {
-        alert("कृपया अपना नाम दर्ज करें!");
-        return;
-    }
-    username = enteredName;
-    usernameModal.style.display = 'none';
-    
-    fetchMessages();
-    setupRealtime();
-}
-
-joinBtn.addEventListener('click', setUsername);
-modalInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') setUsername();
-});
 
 // वर्तमान समय निकालने का फंक्शन
 function getCurrentTime() {
@@ -50,7 +36,75 @@ function getCurrentTime() {
     return `${hours}:${minutes} ${ampm}`;
 }
 
-// 1. पुराने मैसेजेस लोड करना
+// 🔐 1. नया अकाउंट बनाने का लॉजिक (Sign Up)
+signupBtn.addEventListener('click', async () => {
+    const email = authEmail.value.trim();
+    const password = authPassword.value.trim();
+
+    if (!email || !password) {
+        alert("कृपया ईमेल और पासवर्ड दोनों दर्ज करें!");
+        return;
+    }
+    if (password.length < 6) {
+        alert("पासवर्ड कम से कम 6 अक्षरों का होना चाहिए!");
+        return;
+    }
+
+    signupBtn.innerText = "अकाउंट बन रहा है...";
+    signupBtn.disabled = true;
+
+    const { data, error } = await supabaseClient.auth.signUp({
+        email: email,
+        password: password,
+    });
+
+    if (error) {
+        alert("साइन अप फेल: " + error.message);
+        signupBtn.innerText = "नया अकाउंट बनाएं (Sign Up)";
+        signupBtn.disabled = false;
+    } else {
+        alert("🎉 अकाउंट सफलतापूर्वक बन गया! अब आप लॉगइन कर सकते हैं।");
+        signupBtn.innerText = "नया Account बन गया";
+        signupBtn.disabled = false;
+    }
+});
+
+// 🔑 2. लॉगइन करने का लॉजिक (Log In)
+loginBtn.addEventListener('click', async () => {
+    const email = authEmail.value.trim();
+    const password = authPassword.value.trim();
+
+    if (!email || !password) {
+        alert("कृपया ईमेल और पासवर्ड दर्ज करें!");
+        return;
+    }
+
+    loginBtn.innerText = "लॉगइन हो रहा है...";
+    loginBtn.disabled = true;
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: password,
+    });
+
+    if (error) {
+        alert("लॉगइन फेल: " + error.message);
+        loginBtn.innerText = "लॉगइन करें";
+        loginBtn.disabled = false;
+    } else if (data.user) {
+        userEmail = data.user.email;
+        
+        // लॉगइन सफल होने पर स्क्रीन बदलना
+        authModal.style.display = 'none';
+        chatContainer.style.display = 'flex';
+        
+        // डेटा लोड करना और लाइव आना
+        fetchMessages();
+        setupRealtime();
+    }
+});
+
+// 3. पुराने मैसेजेस लोड करना
 async function fetchMessages() {
     try {
         const { data, error } = await supabaseClient
@@ -78,7 +132,7 @@ window.copyToClipboard = function(url) {
     });
 }
 
-// 2. स्क्रीन पर मैसेज (टेक्स्ट, इमेज या ऑल-फाइल) दिखाना
+// 4. स्क्रीन पर मैसेजेस और फाइल्स दिखाना
 function appendMessage(msg) {
     if (msg.is_system) {
         const sysDiv = document.createElement('div');
@@ -92,18 +146,17 @@ function appendMessage(msg) {
     const msgDiv = document.createElement('div');
     msgDiv.classList.add('message');
     
-    if (msg.username === username) msgDiv.classList.add('mine');
+    // चेक करना कि क्या यह मैसेज इसी लॉगइन यूजर का है
+    if (msg.username === userEmail) msgDiv.classList.add('mine');
 
     const displayTime = msg.created_at ? new Date(msg.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : getCurrentTime();
 
     let contentHTML = `<span>${msg.text}</span>`;
     
-    // अगर कोई फाइल या इमेज की यूआरएल मौजूद है
     if (msg.image_url) {
         const fileUrl = msg.image_url;
         const lowerUrl = fileUrl.toLowerCase();
         
-        // चेक करें कि क्या यह इमेज है
         if (lowerUrl.endsWith('.png') || lowerUrl.endsWith('.jpg') || lowerUrl.endsWith('.jpeg') || lowerUrl.endsWith('.gif') || lowerUrl.endsWith('.webp')) {
             contentHTML = `
                 <img src="${fileUrl}" class="chat-image" alt="image" onclick="window.open('${fileUrl}', '_blank')" style="max-width:100%; border-radius:8px; cursor:pointer;">
@@ -112,7 +165,6 @@ function appendMessage(msg) {
                 </div>
             `;
         } else {
-            // इमेज के अलावा कोई भी फाइल (PDF, Video, ZIP) होने पर सुंदर डाउनलोड कार्ड दिखाएं
             const fileName = msg.text || "डॉक्यूमेंट फाइल";
             contentHTML = `
                 <div class="file-card" style="background: rgba(0,0,0,0.05); padding: 10px; border-radius: 8px; display: flex; flex-direction: column; gap: 5px;">
@@ -126,8 +178,9 @@ function appendMessage(msg) {
         }
     }
 
+    // यहाँ नाम की जगह यूजर की ईमेल आईडी दिखेगी
     msgDiv.innerHTML = `
-        <div class="username">${msg.username}</div>
+        <div class="username" style="font-size:10px; color:rgba(0,0,0,0.4);">${msg.username || 'अनाम यूजर'}</div>
         <div class="msg-content">
             ${contentHTML}
             <span class="msg-time">${displayTime}</span>
@@ -155,7 +208,7 @@ if (searchFileInput) {
     });
 }
 
-// 3. टेक्स्ट मैसेज भेजने का लॉजिक
+// 5. टेक्स्ट मैसेज भेजना
 async function sendMessage() {
     const text = messageInput.value.trim();
     if (!text) return;
@@ -165,7 +218,7 @@ async function sendMessage() {
 
     const { error } = await supabaseClient
         .from('messages')
-        .insert([{ username, text }]);
+        .insert([{ username: userEmail, text }]);
 
     if (error) console.error("मैसेज भेजने में एरर:", error);
 }
@@ -175,10 +228,9 @@ messageInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') sendMessage();
 });
 
-// प्लस बटन पर क्लिक करने पर फ़ाइल मैनेजर खोलें
 attachBtn.addEventListener('click', () => imageInput.click());
 
-// 4. ऑल-फाइल अपलोड लॉजिक (PDF, Video, Docs, etc.)
+// 6. ऑल-फाइल अपलोड लॉजिक
 imageInput.addEventListener('change', async () => {
     const file = imageInput.files[0];
     if (!file) return;
@@ -189,7 +241,6 @@ imageInput.addEventListener('change', async () => {
 
     try {
         const fileExt = originalName.split('.').pop();
-        // यूनिक नाम ताकि फाइलें आपस में ओवरराइट न हों
         const fileName = `${Date.now()}_${Math.floor(Math.random() * 1000)}.${fileExt}`;
         const filePath = `chat-images/${fileName}`;
 
@@ -203,24 +254,23 @@ imageInput.addEventListener('change', async () => {
             .from('chat-media')
             .getPublicUrl(filePath);
 
-        // डेटाबेस में फाइल का नाम और उसकी लाइव लिंक सेव कर रहे हैं
         const { error: insertError } = await supabaseClient
             .from('messages')
-            .insert([{ username, text: originalName, image_url: publicUrl }]);
+            .insert([{ username: userEmail, text: originalName, image_url: publicUrl }]);
 
         if (insertError) throw insertError;
 
     } catch (err) {
         console.error("फाइल अपलोड फेल:", err);
         alert("फाइल अपलोड करने में समस्या आई!");
-    } finally {
+    } military {
         messageInput.placeholder = "एक संदेश लिखें...";
         messageInput.disabled = false;
         imageInput.value = '';
     }
 });
 
-// 5. पूरी चैट साफ़ करने का लॉजिक
+// 7. पूरी चैट साफ़ करना
 clearChatBtn.addEventListener('click', async () => {
     if (!confirm("क्या आप वाकई पूरी चैट साफ़ करना चाहते हैं?")) return;
 
@@ -234,14 +284,14 @@ clearChatBtn.addEventListener('click', async () => {
 
         await supabaseClient
             .from('messages')
-            .insert([{ username: "System", text: `🧹 ${username} द्वारा चैट साफ़ कर दी गई है।`, is_system: true }]);
+            .insert([{ username: "System", text: `🧹 ${userEmail} द्वारा चैट साफ़ कर दी गई है।`, is_system: true }]);
 
     } catch (err) {
         console.error("चैट क्लियर एरर:", err);
     }
 });
 
-// 🌙 6. डार्क मोड टॉगल लॉजिक
+// 🌙 8. डार्क मोड टॉगल
 themeToggleBtn.addEventListener('click', () => {
     document.body.classList.toggle('dark');
     if (document.body.classList.contains('dark')) {
@@ -251,7 +301,7 @@ themeToggleBtn.addEventListener('click', () => {
     }
 });
 
-// 😊 7. इमोजी कीबोर्ड टॉगल
+// 😊 9. इमोजी कीबोर्ड
 emojiBtn.addEventListener('click', () => {
     emojiPicker.classList.toggle('hidden');
 });
@@ -267,10 +317,10 @@ messagesBox.addEventListener('click', () => {
     emojiPicker.classList.add('hidden');
 });
 
-// 8. रियल-टाइम लाइव चैटिंग
+// 10. रियल-टाइम लाइव अपडेट्स
 function setupRealtime() {
     const chatChannel = supabaseClient.channel('public:messages', {
-        config: { presence: { key: username } }
+        config: { presence: { key: userEmail } }
     });
 
     chatChannel
