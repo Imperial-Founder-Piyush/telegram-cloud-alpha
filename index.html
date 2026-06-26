@@ -10,19 +10,25 @@
 </head>
 <body>
 
-<!-- नाम पूछने वाला प्रो पॉप-अप (Username Modal) -->
-<div id="usernameModal" class="modal-backdrop">
+<!-- 🔐 प्रोफेशनल लॉगइन और साइनअप पॉप-अप -->
+<div id="authModal" class="modal-backdrop">
     <div class="modal-card">
         <div class="modal-logo">T</div>
-        <h3>टेलीग्राम क्लाउड में आपका स्वागत है</h3>
-        <p>शुरू करने के लिए अपना नाम दर्ज करें</p>
-        <input type="text" id="modalInput" placeholder="आपका नाम..." autocomplete="off">
-        <button id="joinBtn">चैट शुरू करें</button>
+        <h3 id="authTitle">सुरक्षित लॉगइन करें</h3>
+        <p id="authDesc">अपना अकाउंट खोलें या नया अकाउंट बनाएं</p>
+        
+        <!-- इनपुट फील्ड्स -->
+        <input type="email" id="authEmail" placeholder="आपकी ईमेल आईडी..." autocomplete="off">
+        <input type="password" id="authPassword" placeholder="आपका पासवर्ड (कम से कम 6 अक्षर)..." autocomplete="off">
+        
+        <!-- ऐक्शन बटन्स -->
+        <button id="loginBtn">लॉगइन करें</button>
+        <button id="signupBtn" style="background: #4CAF50; margin-top: 8px;">नया अकाउंट बनाएं (Sign Up)</button>
     </div>
 </div>
 
-<!-- मुख्य चैट स्क्रीन -->
-<div class="chat-container">
+<!-- मुख्य चैट स्क्रीन (यह लॉगइन के बाद ही दिखेगी) -->
+<div class="chat-container" id="chatContainer" style="display: none;">
     <div class="chat-header">
         <div class="header-info">
             <span class="chat-title">Telegram Cloud Alpha</span>
@@ -43,7 +49,7 @@
         <input type="text" id="searchFileInput" placeholder="🔍 मैसेज या फाइल का नाम खोजें..." style="width: 100%; padding: 8px 12px; border: none; border-radius: 20px; outline: none; font-size: 14px; background: var(--search-bg, #fff);">
     </div>
     
-    <!-- मैसेजेस का डिब्बा (टेलीग्राम बैकग्राउंड के साथ) -->
+    <!-- मैसेजेस का डिब्बा -->
     <div class="messages-box" id="messagesBox"></div>
 
     <!-- सुंदर इन-बिल्ट इमोजी कीबोर्ड पैनल -->
@@ -57,21 +63,16 @@
     
     <!-- इनपुट एरिया -->
     <div class="input-area">
-        <!-- 📁 यहाँ हमने accept="*" कर दिया है ताकि हर तरह की फाइल (PDF, Video, Any File) अपलोड हो सके -->
         <input type="file" id="imageInput" accept="*" style="display: none;">
         
-        <!-- फाइल चुनने वाला प्लस (+) बटन -->
         <button id="attachBtn" class="input-action-btn" title="फाइल अपलोड करें">
             <svg viewBox="0 0 24 24"><path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/></svg>
         </button>
 
-        <!-- इमोजी कीबोर्ड खोलने वाला स्माइली बटन -->
         <button id="emojiBtn" class="input-action-btn" title="इमोजी चुनें">😊</button>
-
         <input type="text" id="messageInput" placeholder="एक संदेश लिखें..." autocomplete="off">
         
         <button id="sendBtn">
-            <!-- भेजने वाला तीर (Send Icon) -->
             <svg viewBox="0 0 24 24"><path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/></svg>
         </button>
     </div>
@@ -79,4 +80,5 @@
 
 <script src="./script.js"></script>
 </body>
-</html>
+        </html>
+        
