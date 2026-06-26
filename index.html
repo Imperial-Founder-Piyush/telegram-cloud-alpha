@@ -15,7 +15,7 @@
     <div class="modal-card">
         <div class="modal-logo">T</div>
         <h3>टेलीग्राम क्लाउड में आपका स्वागत है</h3>
-        <p>शुरू करने के लिए अपना name दर्ज करें</p>
+        <p>शुरू करने के लिए अपना नाम दर्ज करें</p>
         <input type="text" id="modalInput" placeholder="आपका नाम..." autocomplete="off">
         <button id="joinBtn">चैट शुरू करें</button>
     </div>
@@ -26,7 +26,7 @@
     <div class="chat-header">
         <div class="header-info">
             <span class="chat-title">Telegram Cloud Alpha</span>
-            <span class="chat-status" id="chatStatus">オンライン चैट रूम (0 लाइव)</span>
+            <span class="chat-status" id="chatStatus">ऑनलाइन चैट रूम (0 लाइव)</span>
         </div>
         <div class="header-buttons">
             <!-- डार्क मोड टॉगल बटन -->
@@ -38,7 +38,7 @@
         </div>
     </div>
 
-    <!-- 🔍 नया सर्च और फ़िल्टर बार (Search Bar) -->
+    <!-- 🔍 सर्च और फ़िल्टर बार -->
     <div class="search-bar-container" style="padding: 8px 12px; background: rgba(0,0,0,0.05); display: flex; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.1);">
         <input type="text" id="searchFileInput" placeholder="🔍 मैसेज या फाइल का नाम खोजें..." style="width: 100%; padding: 8px 12px; border: none; border-radius: 20px; outline: none; font-size: 14px; background: var(--search-bg, #fff);">
     </div>
@@ -57,11 +57,11 @@
     
     <!-- इनपुट एरिया -->
     <div class="input-area">
-        <!-- इमेज/फोटो अपलोड करने के लिए छुपा हुआ इनपुट -->
-        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+        <!-- 📁 यहाँ हमने accept="*" कर दिया है ताकि हर तरह की फाइल (PDF, Video, Any File) अपलोड हो सके -->
+        <input type="file" id="imageInput" accept="*" style="display: none;">
         
-        <!-- इमेज चुनने वाला प्लस (+) बटन -->
-        <button id="attachBtn" class="input-action-btn" title="फोटो भेजें">
+        <!-- फाइल चुनने वाला प्लस (+) बटन -->
+        <button id="attachBtn" class="input-action-btn" title="फाइल अपलोड करें">
             <svg viewBox="0 0 24 24"><path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/></svg>
         </button>
 
